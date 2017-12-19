@@ -1,7 +1,7 @@
 function [xopt, fopt] = es_off(stopeval)
 % [xp, fp, stat] = es(fitnessfct, n, lb, ub, stopeval)
   % Strategy parameters
-  n = 30;
+  n = 30; // vector size
   
   ub = 10000;
   lb = 0;

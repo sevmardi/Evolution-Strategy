@@ -1,0 +1,81 @@
+Introduction
+------------
+In this assignment we are going to briefly present the idea behind Evolutionary Strategy problem for real valued vector of size 30.  We will start with a description of the fundamental problem statement and the reason behind our implementation. Further we will walk you through the implementation and explain the algorithm, our approach and what kind of issues we run into during the implementation. Afterwards we will present a table with our experiments with different parameters that we run our results on. Finally, by the end we will draw a line in the sand and discuses some of the issues and our experiments approach. 
+
+
+Problem
+---------
+Evolutionary strategy for ES(MU, LAMDA) is one of the tricky. There were some problem with choosing default sigma value. Some interesting moment of realization of recombination. Error on handling fitness function at the beginning. Finally, selection offspring was some of hard methods to implicate.
+
+First of all, we go through the basic parameters which we choose as a suitable. In our
+realization we make evolution strategies where number of parent size was m = 100 and
+offspring size was l = 400. Search domain was lb ≤ d ≤ ub, lb = 0 and ub = 10000nm. The
+number of layer size is n = 30 (vector length).
+As default value of sigma we choose sigma = 1/ub. Learning rate according to recommendation of Schwefel we choose t = 1/sqrt(n). 
+
+Moving towards to algorithm itself we initialize parents and evaluate it. Afterwards, there appear problem of handling fitness function ‘optical’. Fitness function always return string value, that’s why we convert it to double because it is most suitable type
+
+
+xp = randi([lb, ub], m, n);
+for h = 1:m
+fp = str2double(optical(xp(h, :)));
+end
+
+
+
+Parents and fitness evaluation are ready. Next thing, we open evaluation loop where we
+started from mutating our step size (sigma -> sigma_prime). We are going to use it in
+mutating our parents variables. Next step, it is recombining the parents, to do it we make list
+of combination of pairs. After, by choosing pairs we combine it by using discrete combination
+method which is randomly copied variable of parent 1 or parent 2 in some position. At the
+same time we also mutate objective variable by using sigma prime. In addition, sigma is
+updated after creating offspring. We’ve got new offsprings.
+
+
+
+
+
+
+
+sigma_prime = sigma * exp(t * normrnd(0,1));
+combinations = randi([1, m], l, 2);
+for i = 1:l
+pair_1 = xp(combinations(i, 1), :);
+pair_2 = xp(combinations(i, 2), :);
+for j = 1:n
+if rand < 0.5
+offspring(i, j) = pair_1(1, j) + (sigma_prime * normrnd(0,1));
+else
+offspring(i, j) = pair_2(1, j) + (sigma_prime * normrnd(0,1));
+end
+end
+
+
+
+In the next step, we evaluate new offsprings. Here is tricky moment, we need select new
+parents. Our strategy is ES(M, L) that’s why we take new parents only from new offspring.
+The number of our offspring much more than parents size that’s why need to sort the
+offsprings and choose only offspring with lowest fitness according to the minimization. To
+realize it we use cell array where we put each offsprings into the first column and their fitness
+values into the second column but with same row. It is comfortable to sort cell array by fitness
+value. Finally, we take only needed size of offspring with evaluation, and put them to their
+place.
+
+
+fo_(i) = str2double(optical(offspring(i,:)));
+sorting{i, 1} = offspring(i,:);
+sorting{i, 2} = fo_(i);
+[ranks_ordered, idx] = sort(cell2mat(sorting(:,2)));
+sorted_offspring = sorting(idx,:);
+xo = cell2mat(sorted_offspring(:,1))
+fo = cell2mat(sorted_offspring(:,2))
+
+xp = xo(1:m,:);
+fp = fo(1:m,:);
+
+
+
+
+Discussion and Conclusion
+-------------------------
+
