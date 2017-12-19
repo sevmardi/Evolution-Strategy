@@ -5,12 +5,13 @@ In this assignment we are going to briefly present the idea behind Evolutionary 
 
 Problem
 ---------
-Evolutionary strategy for ES(MU, LAMDA) is one of the tricky. There were some problem with choosing default sigma value. Some interesting moment of realization of recombination. Error on handling fitness function at the beginning. Finally, selection offspring was some of hard methods to implicate.
+The main reason behind the implmentation is to optimize the thickness of multilayer optical filters with a real vector of size 30. 
 
-First of all, we go through the basic parameters which we choose as a suitable. In our
-realization we make evolution strategies where number of parent size was m = 100 and
-offspring size was l = 400. Search domain was lb ≤ d ≤ ub, lb = 0 and ub = 10000nm. The
+Evolutionary strategy for ES(MU, LAMDA) is quite tricky to get it right. During our expermintins there were some issues like for instance choosing the default sigma value. We also had some interesting moment of realization of recombination. Error on handling fitness function at the beginning. Finally, selection offspring was some of hard methods to implicate.
+
+First of all, we go through the basic parameters which we choose as a suitable. In our realization we make evolution strategies where number of parent size was m = 100 and offspring size was l = 400. Search domain was lb ≤ d ≤ ub, lb = 0 and ub = 10000nm. The
 number of layer size is n = 30 (vector length).
+
 As default value of sigma we choose sigma = 1/ub. Learning rate according to recommendation of Schwefel we choose t = 1/sqrt(n). 
 
 Moving towards to algorithm itself we initialize parents and evaluate it. Afterwards, there appear problem of handling fitness function ‘optical’. Fitness function always return string value, that’s why we convert it to double because it is most suitable type
@@ -21,20 +22,7 @@ for h = 1:m
 fp = str2double(optical(xp(h, :)));
 end
 
-
-
-Parents and fitness evaluation are ready. Next thing, we open evaluation loop where we
-started from mutating our step size (sigma -> sigma_prime). We are going to use it in
-mutating our parents variables. Next step, it is recombining the parents, to do it we make list
-of combination of pairs. After, by choosing pairs we combine it by using discrete combination
-method which is randomly copied variable of parent 1 or parent 2 in some position. At the
-same time we also mutate objective variable by using sigma prime. In addition, sigma is
-updated after creating offspring. We’ve got new offsprings.
-
-
-
-
-
+Parents and fitness evaluation are ready. Next thing, we open evaluation loop where we started from mutating our step size (sigma -> sigma_prime). We are going to use it in mutating our parents variables. Next step, it is recombining the parents, to do it we make list of combination of pairs. After, by choosing pairs we combine it by using discrete combination method which is randomly copied variable of parent 1 or parent 2 in some position. At the same time we also mutate objective variable by using sigma prime. In addition, sigma is updated after creating offspring. We’ve got new offsprings.
 
 
 sigma_prime = sigma * exp(t * normrnd(0,1));
@@ -78,4 +66,4 @@ fp = fo(1:m,:);
 
 Discussion and Conclusion
 -------------------------
-
+This assignment was by far the most challenging by far. At least for us. It needed lots of tweaking in parameters to get the right results for instance. The most time costly was the running time of the entire program. It consumed lots of time, but by the end we were able to produce some meaningful results and we are by far happy with it. The implementation of ES was quite something, but Hao was there of us all. We would like to take a second to say that we are very thankful for his support and guidance throughout this entire course. He has done great job in both working group sessions and lab sessions. At first we were having bit of trouble understading the concept of ES. It's challenging and demands quite bit of time to get the concept right. 
